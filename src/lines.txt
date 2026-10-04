@@ -1,0 +1,37 @@
+z1|Great job, Zoe!|amy
+z2|Sparkle power, Zoe!|amy
+z3|Yay, Zoe!|amy
+z4|Zoe, you're magical!|amy
+z5|Zoe, you're a superstar!|amy
+z6|Wow, Zoe! So sparkly!|amy
+z7|Go, Zoe, go!|amy
+z8|You did it, Zoe!|amy
+rain|Rainbow time!|amy
+lolli|Yum yum, lollipop!|amy
+cup|Cupcake! Yummy!|amy
+gem|Ooh! A rainbow gem!|amy
+fly|Hello, butterfly!|amy
+star|Twinkle, twinkle!|amy
+boop|Boop! Bye bye, grumpy cloud!|amy
+boop2|No more grumpy! Rainbow!|amy
+dash|Rainbow dash! Zoom zoom!|amy
+magnet|Magnet sparkles!|amy
+bubble|Giant bubble! Wheee!|amy
+oops|Oopsie! Just a little rain!|amy
+oops2|That's okay, Zoe! Keep flying!|amy
+hug|Rainbow hug! All better!|amy
+s1|Cotton Candy Clouds!|amy
+s2|Lollipop Forest!|amy
+s3|Rainbow Waterfall!|amy
+s4|Starry Night Castle!|amy
+hello|Hi Zoe! Let's fly!|amy
+castle|We made it to the castle!|amy
+party|Dance party!|amy
+title|Zoe's Unicorn Adventure!|amy
+pretty|Ooh, pretty!|amy
+hehe|Hee hee hee!|amy
+c1|Sprinkle!|amy
+c2|Sparkle!|amy
+c3|Lollipop!|amy
+c4|Yum yum!|amy
+c5|Never stop!|amy
