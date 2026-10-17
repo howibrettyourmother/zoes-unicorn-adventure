@@ -3,7 +3,7 @@ const cv=document.getElementById('c'),X=cv.getContext('2d');
 const Q=location.search,DEBUG=/[?&]debug=1/.test(Q),OG=/[?&]og=1/.test(Q);
 let W=400,H=760,DPR=1,SC=1,TOP=0;
 const safeEl=document.createElement('div');safeEl.style.cssText='position:fixed;top:0;left:0;height:env(safe-area-inset-top);width:1px;pointer-events:none;visibility:hidden';document.body.appendChild(safeEl);
-function resize(){const vw=innerWidth,vh=innerHeight;DPR=Math.min(devicePixelRatio||1,2.5);SC=Math.min(vw/400,vh/560);W=vw/SC;H=vh/SC;TOP=(safeEl.offsetHeight||0)/SC;
+function resize(){const vw=innerWidth,vh=innerHeight;DPR=Math.min(devicePixelRatio||1,Math.min(vw,vh)>=700?1.5:2.5);SC=Math.min(vw/400,vh/(vw>vh&&vh>=700?520:560));W=vw/SC;H=vh/SC;TOP=(safeEl.offsetHeight||0)/SC;
   cv.width=Math.round(vw*DPR);cv.height=Math.round(vh*DPR);cv.style.width=vw+'px';cv.style.height=vh+'px'}
 addEventListener('resize',resize);resize();
 const R=Math.random,rr=(a,b)=>a+R()*(b-a),pick=a=>a[(R()*a.length)|0],clamp=(v,a,b)=>v<a?a:v>b?b:v,lerp=(a,b,t)=>a+(b-a)*t,TAU=Math.PI*2;
