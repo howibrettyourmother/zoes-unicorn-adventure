@@ -102,7 +102,7 @@ const AUD=(()=>{
   function hat(t,v){const G=g(0,musicDuck);env(G,t,0.001,0.005,0.03,v);n(t,0.05,f('highpass',8000,0.7,G))}
   function chant(k,t,rate){const b=clips[k];if(!b||t<curEnd)return;const s=C.createBufferSource();s.buffer=b;s.playbackRate.value=rate;s.connect(chantBus);s.start(t);stats.chants++;
     const e=t+b.duration/rate+0.05;if(e>curEnd)curEnd=e}
-  function schedule(){if(!C||theme==='off'||C.state!=='running')return;if(nextT<now())nextT=now()+0.05;
+  function schedule(){if(window.BGM&&BGM.ready)return;if(!C||theme==='off'||C.state!=='running')return;if(nextT<now())nextT=now()+0.05;
     while(nextT<now()+0.15){const t=nextT,i=step%256,bar=(i/16)|0,s=i%16,e8=s>>1,ch=PROG[bar],night=theme==='night',soft=theme==='end'?0.7:1,full=theme==='play'||theme==='party'||theme==='dash';
       if(i===0)loopN=(step/256)|0;
       // bubbly bass: bouncy root-fifth-octave on eighths
