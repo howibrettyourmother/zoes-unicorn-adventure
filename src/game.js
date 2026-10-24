@@ -75,7 +75,7 @@ function praise(pool,gap,prio){if(runT-lastPraise<(gap||2.4))return false;if(AUD
 let cntN=0,cntT=-9;
 function collect(o){o.got=1;counts[o.k]++;score+=TV[o.k];const S=AUD.SFX;
   floatText('+'+TV[o.k],o.x,o.y-26,o.k==='gem'?'#b57bff':'#ff5fa8');glitter(o.x,o.y,o.k==='star'?10:18,o.k==='gem'?1.4:1);
-  if(o.k==='star'){S.chime();if(runT-cntT>1.3)cntN=0;cntT=runT;cntN=cntN%10+1;AUD.say('n'+cntN,3);lastPraise=runT;floatText(String(cntN),o.x,o.y-52,'#ff5fa8')}// say each star's number: one, two, three...
+  if(o.k==='star'){S.chime();if(runT-cntT>1.3)cntN=0;cntT=runT;cntN=cntN%10+1;AUD.say('n'+cntN,3);lastPraise=runT;floatText(String(cntN),o.x,o.y-52,'#ff5fa8');if(counts.star%15===0)setTimeout(()=>{if(runT-cntT>1.2)AUD.say('z2',2)},1600)}// say each star's number: one, two, three...
   else if(o.k==='lolli'){S.yum();S.chime(1);praise(['lolli','lolli','z1','z3'],1.6)}
   else if(o.k==='cup'){S.yum();S.chime(1);praise(['cup','z3','z1','z7'],1.8)}
   else if(o.k==='gem'){S.sparkle();S.chime(1);hearts3(o.x,o.y);praise(['gem','z4','z5'],1,2)}
