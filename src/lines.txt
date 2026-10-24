@@ -35,3 +35,13 @@ c2|Sparkle!|amy
 c3|Lollipop!|amy
 c4|Yum yum!|amy
 c5|Never stop!|amy
+n1|One!|amy
+n2|Two!|amy
+n3|Three!|amy
+n4|Four!|amy
+n5|Five!|amy
+n6|Six!|amy
+n7|Seven!|amy
+n8|Eight!|amy
+n9|Nine!|amy
+n10|Ten!|amy
