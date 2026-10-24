@@ -1,3 +1,4 @@
+import os
 # Headless feature tests at iPhone 13 and iPad sizes (real touch input via CDP), plus screenshots.
 import asyncio,sys
 from playwright.async_api import async_playwright
@@ -15,8 +16,12 @@ async def run(p,b,name,dev,suf):
     await m.goto(BASE+('&' if '?' in BASE else '?')+'debug=1');await m.wait_for_timeout(1000)
     vp=await m.evaluate('[innerWidth,innerHeight]')
     await m.touchscreen.tap(vp[0]*0.5,vp[1]*0.2);await m.wait_for_timeout(1200)
+    NC=len([l for l in open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'lines.txt')) if l.strip()])
+    for _ in range(40):
+        if await m.evaluate('__W.audio.clipCount')>=NC:break
+        await m.wait_for_timeout(200)
     a=await m.evaluate('({u:__W.audio.unlocked,r:__W.audio.running,c:__W.audio.clipCount,s:__W.state,th:__W.audio.theme})')
-    chk(f'[{name}] first tap unlocks audio + title music',a['u'] and a['r'] and a['s']=='title' and a['th']=='title',str(a));chk(f'[{name}] 37 voice clips decoded',a['c']==37,str(a['c']))
+    chk(f'[{name}] first tap unlocks audio + title music',a['u'] and a['r'] and a['s']=='title' and a['th']=='title',str(a));a['c']=await m.evaluate('__W.audio.clipCount');chk(f'[{name}] {NC} voice clips decoded',a['c']==NC,str(a['c']))
     # colour pickers (mane + dress)
     t=await m.evaluate('__W.titleUI()');r=t['m'][2];await gtap(r[0]+r[2]/2,r[1]+r[3]/2);r=t['d'][1];await gtap(r[0]+r[2]/2,r[1]+r[3]/2);await m.wait_for_timeout(500)
     md=await m.evaluate('[__W.mane,__W.dress]');chk(f'[{name}] mane + dress pickers',md==[2,1],str(md))

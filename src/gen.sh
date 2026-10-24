@@ -4,6 +4,7 @@ mkdir -p /tmp/zua && cd /tmp/zua
 [ -f silent.mp3 ] || ffmpeg -y -loglevel error -f lavfi -i anullsrc=r=24000:cl=mono -t 1 -b:a 32k silent.mp3
 while IFS='|' read -r k t v; do
   [ -z "$k" ] && continue
+  [ "$v" = kv ] && continue  # kv = shared Kokoro kids-voice pack clip, copied into src/clips (not made here)
   [ -f $k.mp3 ] && [ "$FORCE" != 1 ] && continue
   LS=0.88; case $k in c*) LS=0.8;; esac
   echo "$t" | /tmp/tts/bin/piper -m /tmp/voices/en_US-$v-medium.onnx -f raw_$k.wav --length-scale $LS --noise-scale 0.75 >/dev/null 2>&1

@@ -4,7 +4,7 @@ const AUD=(()=>{
   const R=Math.random,rr=(a,b)=>a+R()*(b-a),pick=a=>a[(R()*a.length)|0];
   const now=()=>C?C.currentTime:0;const stats={voice:0,last:'',dropped:0,sfx:0,chants:0,notes:0};
   try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
-  function build(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;C=new AC();
+  function build(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;C=new AC();C.addEventListener&&C.addEventListener('statechange',()=>{if(C.state!=='running'&&!document.hidden&&unlocked)C.resume().catch(()=>{})});
     master=C.createGain();master.gain.value=muted?0:0.9;const comp=C.createDynamicsCompressor();comp.threshold.value=-12;comp.ratio.value=4;
     master.connect(comp);comp.connect(C.destination);
     const bus=v=>{const g=C.createGain();g.gain.value=v;g.connect(master);return g};
@@ -22,6 +22,7 @@ const AUD=(()=>{
       if(silentEl.paused&&!document.hidden){const p=silentEl.play();p&&p.catch&&p.catch(()=>{})}
       if(!unlocked){unlocked=true;loadClips()}}catch(e){console.warn('unlock',e)}}
   ['touchstart','touchend','pointerdown','mousedown','click','keydown'].forEach(ev=>window.addEventListener(ev,unlock,{capture:true,passive:true}));
+  const wake=()=>{if(C&&unlocked&&!document.hidden&&C.state!=='running')C.resume().catch(()=>{})};window.addEventListener('pageshow',wake);window.addEventListener('focus',wake);setInterval(wake,1500);
   document.addEventListener('visibilitychange',()=>{if(!C)return;if(document.hidden){C.suspend&&C.suspend().catch(()=>{});silentEl&&silentEl.pause()}
     else if(unlocked){C.resume().catch(()=>{});if(silentEl){const p=silentEl.play();p&&p.catch&&p.catch(()=>{})}}});
   function loadClips(){if(loading)return;loading=true;for(const k in CLIPS){try{const b=atob(CLIPS[k]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
@@ -67,14 +68,15 @@ const AUD=(()=>{
       for(let i=0;i<24;i++){const s=t+rr(0.05,1.4),G=g(0,sfxBus);env(G,s,0.001,0.005,0.03,rr(0.06,0.14));n(s,0.05,f('bandpass',rr(1000,2400),1.2,G))}})
   };
   // ---------- one voice at a time, with ducking ----------
-  let curEnd=0,curPrio=0,queued=null;
+  let curEnd=0,curPrio=0,queued=null,curSrc=null;
   function duck(t,end,mv,sv){musicDuck.gain.cancelScheduledValues(t);musicDuck.gain.setTargetAtTime(mv,t,0.04);musicDuck.gain.setTargetAtTime(1,end,0.2);
     sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(sv,t,0.04);sfxBus.gain.setTargetAtTime(0.62,end,0.2)}
   /*vguard*/let _vk='',_vt=0,_sx=[];function sfxOK(){const n=Date.now();_sx=_sx.filter(x=>n-x<350);if(_sx.length>=3)return false;_sx.push(n);return true}
-  function say(k,prio,fromQ){const n=Date.now();if(k===_vk&&n-_vt<4000)return false;if((prio||1)<3&&C&&now()<curEnd-0.05)return false;const r=say0(k,prio);queued=null;if(r){_vk=k;_vt=n}return r}
+  function say(k,prio,fromQ){const n=Date.now();if(k===_vk&&n-_vt<4000&&(prio||1)<4)return false;if((prio||1)<3&&C&&now()<curEnd-0.05)return false;const r=say0(k,prio);queued=null;if(r){_vk=k;_vt=n}return r}
   function say0(k,prio){prio=prio||1;if(!ok())return false;const b=clips[k];if(!b)return false;const t=now();
+    if(t<curEnd&&prio>=4&&curSrc){try{curSrc.stop()}catch(e){}curEnd=t}// counting numbers never get dropped: the newest number cuts the old one
     if(t<curEnd){if(prio>=2&&(!queued||queued.prio<prio)){queued={k,prio};return true}stats.dropped++;return false}
-    const s=C.createBufferSource();s.buffer=b;s.connect(voiceBus);s.start(t+0.02);curEnd=t+0.02+b.duration+0.25;curPrio=prio;stats.voice++;stats.last=k;
+    const s=C.createBufferSource();s.buffer=b;s.connect(voiceBus);s.start(t+0.02);curSrc=s;curEnd=t+0.02+b.duration+0.25;curPrio=prio;stats.voice++;stats.last=k;
     duck(t,curEnd,0.3,0.4);return true}
   setInterval(()=>{if(queued&&C&&now()>=curEnd){const q=queued;queued=null;say(q.k,q.prio)}},60);
   // ---------- music: ORIGINAL bubbly candy-pop tune (C major, 4/4) ----------
