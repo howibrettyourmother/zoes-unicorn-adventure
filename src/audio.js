@@ -78,6 +78,15 @@ const AUD=(()=>{
     if(t<curEnd){if(prio>=2&&(!queued||queued.prio<prio)){queued={k,prio};return true}stats.dropped++;return false}
     const s=C.createBufferSource();s.buffer=b;s.connect(voiceBus);s.start(t+0.02);curSrc=s;curEnd=t+0.02+b.duration+0.25;curPrio=prio;stats.voice++;stats.last=k;
     duck(t,curEnd,0.3,0.4);return true}
+  // counting rule (Brett, 2026-10-24): speak numbers only while counting a small set (<=20); never repeat a number already said this round;
+  // taps <0.35 s apart are shown, not spoken, and the final total is said once after the burst; numbers cut each other (never stack)
+  const CR={said:new Set(),lastT:-9,pend:0,tm:0,max:10};
+  function count(n,reset){if(reset||n<=1)CR.said.clear();const t=performance.now()/1000,fast=t-CR.lastT<0.35;CR.lastT=t;clearTimeout(CR.tm);
+    if(!(n>=1&&n<=CR.max))return false;
+    if(fast){CR.pend=n;CR.tm=setTimeout(()=>{const p=CR.pend;CR.pend=0;if(p&&!CR.said.has(p)&&numSay(p))CR.said.add(p)},450);stats.countFast=(stats.countFast||0)+1;return true}
+    if(CR.said.has(n))return true;const ok=numSay(n);if(ok)CR.said.add(n);return ok}
+  count.reset=()=>{CR.said.clear();CR.pend=0;clearTimeout(CR.tm)};
+  function numSay(n){return say('n'+n,4)}
   setInterval(()=>{if(queued&&C&&now()>=curEnd){const q=queued;queued=null;say(q.k,q.prio)}},60);
   // ---------- music: ORIGINAL bubbly candy-pop tune (C major, 4/4) ----------
   // music box / glockenspiel lead, bubbly filtered-square bass, sparkle arps, handclaps, soft kick, and a sung-on-the-beat chant hook
@@ -123,5 +132,5 @@ const AUD=(()=>{
       if(chantOn&&(theme==='title'||theme==='party'||(theme==='play'&&loopN%2===1))&&s%2===0){for(const c of CHANT)if(c[0]===bar&&c[1]===e8)chant(c[2],t,c[3])}
       step++;nextT+=s16}}
   function setMuted(m){muted=m;localStorage.setItem('zua_muted',m?'1':'0');if(C)master.gain.setTargetAtTime(m?0:0.9,now(),0.03)}
-  return{unlock,SFX,say,setTheme,setMuted,get muted(){return muted},get unlocked(){return unlocked&&!!C},get running(){return !!C&&C.state==='running'},get clipCount(){return Object.keys(clips).length},get theme(){return theme},stats,get speaking(){return C&&now()<curEnd},get beat(){return C&&theme!=='off'?(now()/(s16*4)):0}};
+  return{unlock,SFX,say,count,setTheme,setMuted,get muted(){return muted},get unlocked(){return unlocked&&!!C},get running(){return !!C&&C.state==='running'},get clipCount(){return Object.keys(clips).length},get theme(){return theme},stats,get speaking(){return C&&now()<curEnd},get beat(){return C&&theme!=='off'?(now()/(s16*4)):0}};
 })();
