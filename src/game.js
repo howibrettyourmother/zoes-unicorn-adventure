@@ -39,7 +39,10 @@ function spawnDecor(pre){const s=state==='play'?sectionIx():0;for(let L=0;L<3;L+
   decor.push({k,L,x,y,s:sc,ph:R()*9,c:pick(RAINBOW),c2:pick(RAINBOW)})}
   decor=decor.filter(d=>d.x>-200)}
 // ---------------- spawning ----------------
-const TV={star:10,lolli:25,cup:30,gem:75,fly:40};
+const TV={star:10,lolli:25,cup:30,gem:75,fly:40,letter:20};
+let abcGot=(()=>{try{return JSON.parse(localStorage.getItem('zua_abc')||'{}')}catch(e){return{}}})();
+function saveAbc(){try{localStorage.setItem('zua_abc',JSON.stringify(abcGot))}catch(e){}}
+const ABC='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 function addTreat(k,x,y){const o={type:'t',k,x,y,y0:y,ph:R()*9,r:k==='gem'?20:18};objs.push(o);return o}
 function lane(){return rr(TOPY()+30,GY()-50)}
 function spawnStuff(dt){if(runT>RUN-9||card&&card.t<1.6)return;const s=sectionIx(),X0=W+40;
@@ -49,6 +52,7 @@ function spawnStuff(dt){if(runT>RUN-9||card&&card.t<1.6)return;const s=sectionIx
     else if(r<0.7)addTreat('lolli',X0,y);
     else if(r<0.84)addTreat('cup',X0,y);
     else if(r<0.92){addTreat('fly',X0,y)}
+    else if(r<0.97){const ch=ABC[(Math.random()*26)|0];objs.push({type:'t',k:'letter',ch,x:X0,y,y0:y,ph:R()*9,r:22})}
     else addTreat('gem',X0,y)}
   cloudT-=dt;if(cloudT<=0){cloudT=rr(3.4,5.2)-s*0.35;objs.push({type:'c',x:X0+30,y:rr(TOPY()+10,Math.max(TOPY()+20,GY()-250)),ph:R()*9,booped:0,bt:0,r:40})}
   powT-=dt;if(powT<=0){powT=rr(20,25);const k=['dash','magnet','bubble'][powIx++%3];objs.push({type:'p',k,x:X0+20,y:lane(),y0:0,ph:R()*9,r:30})}}
@@ -73,8 +77,8 @@ function wandBoop(c){uni.wand=0.5;uni.wandT={x:c.x,y:c.y,t:0};boop(c,true)}
 // ---------------- game events ----------------
 function praise(pool,gap,prio){if(runT-lastPraise<(gap||2.4))return false;if(AUD.say(pick(pool),prio||1)){lastPraise=runT;return true}return false}
 let cntN=0,cntT=-9;
-function collect(o){o.got=1;counts[o.k]++;score+=TV[o.k];const S=AUD.SFX;
-  floatText('+'+TV[o.k],o.x,o.y-26,o.k==='gem'?'#b57bff':'#ff5fa8');glitter(o.x,o.y,o.k==='star'?10:18,o.k==='gem'?1.4:1);
+function collect(o){o.got=1;if(o.k!=='letter')counts[o.k]=(counts[o.k]||0)+1;score+=TV[o.k]||20;const S=AUD.SFX;
+  floatText(o.k==='letter'?o.ch:('+'+TV[o.k]),o.x,o.y-26,o.k==='gem'?'#b57bff':o.k==='letter'?'#ffe066':'#ff5fa8');glitter(o.x,o.y,o.k==='star'?10:18,o.k==='gem'?1.4:1);
   if(o.k==='star'){S.chime();const gap=runT-cntT>3;cntT=runT;cntN=gap?1:cntN+1;if(AUD.count(cntN,gap))lastPraise=runT;floatText(String(cntN),o.x,o.y-52,'#ff5fa8');if(counts.star%15===0)setTimeout(()=>{if(runT-cntT>1.2)AUD.say('z2',2)},1600)}// say each star's true number: one, two ... twenty-three (kids-voice pack)
   else if(o.k==='lolli'){S.yum();S.chime(1);praise(['lolli','lolli','z1','z3'],1.6)}
   else if(o.k==='cup'){S.yum();S.chime(1);praise(['cup','z3','z1','z7'],1.8)}
@@ -243,6 +247,7 @@ function drawFly(x,y,c,ph,s){s=s||1;const fl=Math.abs(Math.sin(T*14+ph));X.save(
 function drawStarT(x,y,ph){const r=14+Math.sin(ph*4)*1.5;circ(x,y,r+6,'rgba(255,240,150,0.25)');star5(x,y,r+2,'#ffb300',ph,0.5);star5(x,y,r,'#ffe066',ph,0.5);star5(x-2,y-2,r*0.45,'rgba(255,255,255,0.6)',ph,0.5);
   const tw=Math.sin(ph*6);if(tw>0.4)star4(x+10,y-10,tw*6,'#fff')}
 function drawTreat(o){const x=o.x,y=o.y;if(x<-60||x>W+80)return;
+  if(o.k==='letter'){X.save();X.translate(x,y+Math.sin(T*3+o.ph)*6);circ(0,0,22,'#fff');circ(0,0,18,['#ff5c8a','#ffa94d','#ffe066','#69db7c','#4dabf7','#b197fc'][ABC.indexOf(o.ch)%6]);txt(o.ch,0,6,22,'#fff',{st:'#b03a8a',sw:4});X.restore();return}
   if(o.k==='star')drawStarT(x,y,o.ph);
   else if(o.k==='lolli'){circ(x,y,26,'rgba(255,200,230,0.25)');drawLolli(x,y-4,15,o.ph*1.5)}
   else if(o.k==='cup'){circ(x,y,26,'rgba(255,200,230,0.25)');drawCup(x,y+2,1.15)}
