@@ -77,7 +77,8 @@ function wandBoop(c){uni.wand=0.5;uni.wandT={x:c.x,y:c.y,t:0};boop(c,true)}
 // ---------------- game events ----------------
 function praise(pool,gap,prio){if(runT-lastPraise<(gap||2.4))return false;if(AUD.say(pick(pool),prio||1)){lastPraise=runT;return true}return false}
 let cntN=0,cntT=-9;
-function sayLetter(ch){try{const ss=window.speechSynthesis;if(!ss||!ss.speak)return;ss.cancel();const u=new SpeechSynthesisUtterance(ch);u.rate=0.92;u.pitch=1.25;u.volume=0.85;ss.speak(u)}catch(e){}}
+// letter names are recorded clips (the same kids-voice clips Zoe hears in Princess Castle), never robotic speechSynthesis
+function sayLetter(ch){try{AUD.say('ln_'+String(ch).toUpperCase(),3)}catch(e){}}
 function collect(o){o.got=1;if(o.k!=='letter')counts[o.k]=(counts[o.k]||0)+1;score+=TV[o.k]||20;const S=AUD.SFX;
   floatText(o.k==='letter'?o.ch:('+'+TV[o.k]),o.x,o.y-26,o.k==='gem'?'#b57bff':o.k==='letter'?'#ffe066':'#ff5fa8');glitter(o.x,o.y,o.k==='star'?10:18,o.k==='gem'?1.4:1);
   if(o.k==='letter'){abcGot[o.ch]=(abcGot[o.ch]||0)+1;saveAbc();S.chime(1);sayLetter(o.ch);praise(['z1','z3','z4'],2.2)}

@@ -13,3 +13,6 @@ A sparkly, totally wholesome one-touch flying game for Zoe (4). Zoe (with her sp
 - **Sound:** an original bubbly candy-pop tune made live with WebAudio (music box, glockenspiel, bubbly synth bass, sparkle arps, handclaps) plus an original sung-on-the-beat chant – *"Sprinkle! Sparkle! Lollipop! Yum yum!"* – and warm voice lines. The music and words are original, not copied from any existing song. Works with the iPhone silent switch on.
 
 Built as one self-contained `index.html` (`src/build.py`), voices from Piper TTS (`src/gen.sh`), tested headless at iPhone 13 / iPad sizes (`src/test.py`, `src/fullrun.py`).
+
+## Recorded letter voices (v1.4, Nov 2026)
+Floating alphabet letters now say their names with recorded clips (`ln_A`–`ln_Z`, the same kids-voice clips Zoe hears in Princess Castle) instead of the browser's robotic speechSynthesis.
