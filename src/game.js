@@ -178,16 +178,20 @@ function drawZoe(o){// local coords: sitting point (0,0) on unicorn back
   else{X.moveTo(3,-15);X.lineTo(15,-8);X.stroke();// holding the mane
     // wand arm
     const wa=o.wand?-1.9:-0.6+Math.sin(T*3)*0.15;X.save();X.translate(-3,-15);X.rotate(wa);X.beginPath();X.moveTo(0,0);X.lineTo(0,13);X.stroke();X.strokeStyle='#ffe28a';X.lineWidth=2;X.beginPath();X.moveTo(0,12);X.lineTo(0,24);X.stroke();star5(0,26,o.wand?7:5,'#ffd23f',T*3);if(o.wand)star4(0,26,12,'rgba(255,255,255,0.8)');X.restore()}
-  // head
-  const hy=-30;circ(-11,hy+2,6,'#e8b04a');circ(11,hy+2,6,'#e8b04a');circ(-11,hy-3,2.6,'#ff7cc0');circ(11,hy-3,2.6,'#ff7cc0');// pigtails + bows
-  X.beginPath();X.arc(0,hy,12.5,Math.PI,0);X.fillStyle='#e8b04a';X.fill();
+  // head: curly medium-brown hair + large pink bow
+  const hy=-30,hair='#7a4a28';
+  for(const [cx,cy,r] of [[-12,hy+4,5.5],[-14,hy+10,5],[12,hy+4,5.5],[14,hy+10,5],[-8,hy+12,4.5],[8,hy+12,4.5]])circ(cx,cy,r,hair);
+  X.beginPath();X.arc(0,hy,12.5,Math.PI,0);X.fillStyle=hair;X.fill();
   circ(0,hy,11.5,'#ffe0c8');
+  for(const [cx,cy,r] of [[-8,hy-8,4],[0,hy-10,5],[8,hy-8,4]])circ(cx,cy,r,hair);
+  // large pink bow
+  X.save();X.translate(0,hy-12);X.fillStyle='#ff5c9e';X.beginPath();X.moveTo(0,0);X.lineTo(-9,-6);X.lineTo(-9,6);X.closePath();X.fill();X.beginPath();X.moveTo(0,0);X.lineTo(9,-6);X.lineTo(9,6);X.closePath();X.fill();circ(0,0,2.4,'#fff');X.restore();
   const blink=Math.sin(T*1.3+3)>0.985;
   if(o.happy||cheer||blink){X.strokeStyle='#3a2a20';X.lineWidth=1.8;X.lineCap='round';[-1,1].forEach(sd=>{X.beginPath();X.arc(sd*4.3+2,hy-0.5,2,Math.PI*1.1,Math.PI*1.9);X.stroke()})}
   else[-1,1].forEach(sd=>{circ(sd*4.3+2,hy-1,2.2,'#2b1d14');circ(sd*4.3+2.8,hy-2,0.8,'#fff')});
   circ(-4,hy+4,2.5,'rgba(255,120,160,0.45)');circ(9,hy+4,2.5,'rgba(255,120,160,0.45)');
   X.beginPath();if(cheer||o.open){X.ellipse(2.5,hy+5,3.2,2.6,0,0,TAU);X.fillStyle='#d6456b';X.fill()}else{X.arc(2.5,hy+3.5,3.6,0.2,Math.PI-0.2);X.strokeStyle='#8a3a2a';X.lineWidth=1.5;X.stroke()}
-  X.beginPath();X.arc(0,hy-2,11.5,Math.PI*1.08,Math.PI*1.95);X.strokeStyle='#e8b04a';X.lineWidth=4;X.stroke();// bangs
+  X.beginPath();X.arc(0,hy-2,11.5,Math.PI*1.08,Math.PI*1.95);X.strokeStyle='#7a4a28';X.lineWidth=3;X.stroke();// bangs
   // sparkly crown
   X.save();X.translate(0,hy-11);X.beginPath();X.moveTo(-9,2);X.lineTo(-10,-8);X.lineTo(-5,-3);X.lineTo(0,-11);X.lineTo(5,-3);X.lineTo(10,-8);X.lineTo(9,2);X.closePath();
   const cg=X.createLinearGradient(0,-11,0,2);cg.addColorStop(0,'#fff3a0');cg.addColorStop(1,'#ffbf1f');X.fillStyle=cg;X.fill();X.strokeStyle='#e89a00';X.lineWidth=1;X.stroke();
