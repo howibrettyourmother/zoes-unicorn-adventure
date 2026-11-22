@@ -68,7 +68,7 @@ const AUD=(()=>{
     const dl=C.createDelay(1);dl.delayTime.value=0.29;const fb=C.createGain();fb.gain.value=0.28;const lp=C.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;
     musicDuck.connect(dl);dl.connect(lp);lp.connect(fb);fb.connect(dl);const wet=C.createGain();wet.gain.value=0.35;lp.connect(wet);wet.connect(musicBus);
     const sr=C.sampleRate;noiseBuf=C.createBuffer(1,sr*2,sr);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=R()*2-1;
-    setInterval(schedule,25);}
+    /* synth disabled */0;}
   function unlock(){try{if(!C)build();if(!C)return;try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
       if(C.state!=='running')C.resume().catch(()=>{});
       const s=C.createBufferSource();s.buffer=C.createBuffer(1,1,22050);s.connect(C.destination);s.start(0);
@@ -168,7 +168,7 @@ const AUD=(()=>{
   function hat(t,v){const G=g(0,musicDuck);env(G,t,0.001,0.005,0.03,v);n(t,0.05,f('highpass',8000,0.7,G))}
   function chant(k,t,rate){const b=clips[k];if(!b||t<curEnd)return;const s=C.createBufferSource();s.buffer=b;s.playbackRate.value=rate;s.connect(chantBus);s.start(t);stats.chants++;
     const e=t+b.duration/rate+0.05;if(e>curEnd)curEnd=e}
-  function schedule(){if(window.BGM&&BGM.ready)return;if(!C||theme==='off'||C.state!=='running')return;if(nextT<now())nextT=now()+0.05;
+  function schedule(){return;if(!C||theme==='off'||C.state!=='running')return;if(nextT<now())nextT=now()+0.05;
     while(nextT<now()+0.15){const t=nextT,i=step%256,bar=(i/16)|0,s=i%16,e8=s>>1,ch=PROG[bar],night=theme==='night',soft=theme==='end'?0.7:1,full=theme==='play'||theme==='party'||theme==='dash';
       if(i===0)loopN=(step/256)|0;
       // bubbly bass: bouncy root-fifth-octave on eighths
@@ -677,7 +677,7 @@ if(DEBUG)window.__W={get state(){return state},get score(){return score},get cou
 });
 </script><script>/*offline-sw*/(function(){if(!('serviceWorker' in navigator))return;function badge(){try{if(document.getElementById('offl'))return;var d=document.createElement('div');d.id='offl';d.textContent='\u2713 Ready offline';d.style.cssText='position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 6px);transform:translateX(-50%);background:rgba(46,125,50,.92);color:#fff;font:700 15px -apple-system,system-ui,sans-serif;padding:7px 14px;border-radius:18px;z-index:10000;pointer-events:none;transition:opacity .8s;box-shadow:0 2px 8px rgba(0,0,0,.25)';document.body.appendChild(d);setTimeout(function(){d.style.opacity='0'},4000);setTimeout(function(){d.remove()},5000)}catch(e){}}
 function check(){caches.match('index.html',{ignoreSearch:true}).then(function(r){if(r)badge()}).catch(function(){})}
-addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){return navigator.serviceWorker.ready}).then(function(){if(navigator.serviceWorker.controller)check();else navigator.serviceWorker.addEventListener('controllerchange',check);navigator.serviceWorker.addEventListener('message',function(e){if(e.data==='offline-ready')check()})}).catch(function(){})})})();</script><script>/*bgm*/window.BGM_CFG={"id":"zoes-unicorn-adventure","base":"music/","v":"20261115intro","intro":"intro","tracks":{"title":[48.0, 1.0],"play":[48.0, 1.0],"dash":[48.0, 1.0],"night":[48.0, 1.0],"party":[48.0, 1.0]},"map":{"end":"party","off":""},"pos":"left:10px;top:58px","poll":function(){var a=window.AUD||(typeof AUD!=='undefined'?AUD:null);if(!a)return{};return{area:a.theme,speaking:a.speaking,muted:a.muted}}};</script><script src="music/bgm.js?v=20261115intro" defer></script>
+addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){return navigator.serviceWorker.ready}).then(function(){if(navigator.serviceWorker.controller)check();else navigator.serviceWorker.addEventListener('controllerchange',check);navigator.serviceWorker.addEventListener('message',function(e){if(e.data==='offline-ready')check()})}).catch(function(){})})})();</script><script>/*bgm*/window.BGM_CFG={"id":"zoes-unicorn-adventure","base":"music/","v":"20261122bgm","intro":"intro","tracks":{"title":[110.769231, 1],"play":[99.310345, 1],"dash":[96, 1],"night":[82.285714, 1],"party":[90, 1]},"map":{"end":"party","off":""},"pos":"left:10px;top:58px","poll":function(){var a=window.AUD||(typeof AUD!=='undefined'?AUD:null);if(!a)return{};return{area:a.theme,speaking:a.speaking,muted:a.muted}}};</script><script src="music/bgm.js?v=20261122bgm" defer></script>
 <script>/*sw-reload*/(function(){if(!('serviceWorker' in navigator))return;var sw=navigator.serviceWorker,had=!!sw.controller,done=false;
 sw.addEventListener('controllerchange',function(){if(!had){had=true;return}if(done)return;done=true;try{if(sessionStorage.swReloaded&&Date.now()-sessionStorage.swReloaded<10000)return;sessionStorage.swReloaded=Date.now()}catch(e){}location.reload()});
 function up(){if(sw.getRegistration)sw.getRegistration().then(function(g){if(g)g.update()}).catch(function(){})}
