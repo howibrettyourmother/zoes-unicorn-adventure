@@ -1,6 +1,6 @@
-z1|Great job, Zoe!|amy
+z1|Great job, Zoe!|edge-ana
 z2|Sparkle power, Zoe!|amy
-z3|Yay, Zoe!|amy
+z3|Yay, Zoe!|edge-ana
 z4|Zoe, you're magical!|amy
 z5|Zoe, you're a superstar!|amy
 z6|Wow, Zoe! So sparkly!|amy
@@ -26,14 +26,14 @@ s3|Rainbow Waterfall!|amy
 s4|Starry Night Castle!|amy
 hello|Hi Zoe! Let's fly!|amy
 castle|We made it to the castle!|amy
-party|Dance party!|amy
+party|Dance party!|edge-ana
 title|Zoe's Unicorn Adventure!|amy
 pretty|Ooh, pretty!|amy
 hehe|Hee hee hee!|amy
 c1|Sprinkle!|amy
 c2|Sparkle!|amy
 c3|Lollipop!|amy
-c4|Yum yum!|amy
+c4|Yum yum!|edge-ana
 c5|Never stop!|amy
 n1|One!|kv
 n2|Two!|kv

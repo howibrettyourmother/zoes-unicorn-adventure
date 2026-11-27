@@ -81,8 +81,8 @@ let cntN=0,cntT=-9;
 function sayLetter(ch){try{AUD.say('ln_'+String(ch).toUpperCase(),3)}catch(e){}}
 function collect(o){o.got=1;if(o.k!=='letter')counts[o.k]=(counts[o.k]||0)+1;score+=TV[o.k]||20;const S=AUD.SFX;
   floatText(o.k==='letter'?o.ch:('+'+TV[o.k]),o.x,o.y-26,o.k==='gem'?'#b57bff':o.k==='letter'?'#ffe066':'#ff5fa8');glitter(o.x,o.y,o.k==='star'?10:18,o.k==='gem'?1.4:1);
-  if(o.k==='letter'){abcGot[o.ch]=(abcGot[o.ch]||0)+1;saveAbc();S.chime(1);sayLetter(o.ch);praise(['z1','z3','z4'],2.2)}
-  else if(o.k==='star'){S.chime();const gap=runT-cntT>3;cntT=runT;cntN=gap?1:cntN+1;if(AUD.count(cntN,gap))lastPraise=runT;floatText(String(cntN),o.x,o.y-52,'#ff5fa8');if(counts.star%15===0)setTimeout(()=>{if(runT-cntT>1.2)AUD.say('z2',2)},1600)}// say each star's true number: one, two ... twenty-three (kids-voice pack)
+  if(o.k==='letter'){abcGot[o.ch]=(abcGot[o.ch]||0)+1;saveAbc();S.chime(1);praise(['z1','z3','z4'],2.2)}
+  else if(o.k==='star'){S.chime();const gap=runT-cntT>3;cntT=runT;cntN=gap?1:cntN+1;/* no spoken counting (no learning content) */floatText(String(cntN),o.x,o.y-52,'#ff5fa8');if(counts.star%15===0)setTimeout(()=>{if(runT-cntT>1.2)AUD.say('z2',2)},1600)}// say each star's true number: one, two ... twenty-three (kids-voice pack)
   else if(o.k==='lolli'){S.yum();S.chime(1);praise(['lolli','lolli','z1','z3'],1.6)}
   else if(o.k==='cup'){S.yum();S.chime(1);praise(['cup','z3','z1','z7'],1.8)}
   else if(o.k==='gem'){S.sparkle();S.chime(1);hearts3(o.x,o.y);praise(['gem','z4','z5'],1,2)}
